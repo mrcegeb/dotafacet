@@ -1,1 +1,76 @@
-Test Drigve
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heroes Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Heroes Abilities</h1>
+    <table id="heroesTable">
+        <thead>
+            <tr>
+                <th>Hero Name</th>
+                <th>Ability 1</th>
+                <th>Ability 2</th>
+                <th>Ability 3</th>
+                <th>Ability 4</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Load the XML file
+            fetch('heroes.xml')
+                .then(response => response.text())
+                .then(data => {
+                    let parser = new DOMParser();
+                    let xmlDoc = parser.parseFromString(data, "text/xml");
+
+                    let heroes = xmlDoc.getElementsByTagName("hero");
+                    let tableBody = document.querySelector("#heroesTable tbody");
+
+                    for (let hero of heroes) {
+                        let row = document.createElement("tr");
+
+                        let name = hero.getElementsByTagName("name")[0].textContent;
+                        let ability1 = hero.getElementsByTagName("ability1")[0].textContent;
+                        let ability2 = hero.getElementsByTagName("ability2")[0].textContent;
+                        let ability3 = hero.getElementsByTagName("ability3")[0].textContent;
+                        let ability4 = hero.getElementsByTagName("ability4")[0].textContent;
+
+                        row.innerHTML = `
+                            <td>${name}</td>
+                            <td>${ability1}</td>
+                            <td>${ability2}</td>
+                            <td>${ability3}</td>
+                            <td>${ability4}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    }
+                })
+                .catch(error => {
+                    console.error("Error loading the XML file:", error);
+                });
+        });
+    </script>
+</body>
+</html>
